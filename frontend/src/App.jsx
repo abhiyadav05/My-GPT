@@ -7,7 +7,7 @@ import { Route, Routes } from 'react-router-dom';
 function App() {
   return (
    <>
-    <div className='dark: bg-gradient-to-b from-[#242124]  to-[#000000] '>
+    <div className='dark: bg-gradient-to-b from-[#fefefe]  to-[#dfdada] '>
       <div className='flex h-screen w-screen'>
      <Sidebar/>
      <Routes>

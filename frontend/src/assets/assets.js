@@ -26,7 +26,7 @@ import ai_image9 from "./ai_image9.jpg";
 import ai_image10 from "./ai_image10.jpg";
 import ai_image11 from "./ai_image11.jpg";
 import ai_image12 from "./ai_image12.jpg";
-
+import technology_logo from "./technology.svg"
 export const assets = {
     logo,
     logo_full,
@@ -42,7 +42,8 @@ export const assets = {
     logout_icon,
     logo_full_dark,
     diamond_icon,
-    gallery_icon
+    gallery_icon,
+    technology_logo,
 };
 
 export const dummyUserData = {
