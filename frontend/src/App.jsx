@@ -7,7 +7,10 @@ import { Route, Routes ,useLocation} from 'react-router-dom';
 import { assets } from './assets/assets';
 import './assets/prism.css'
 import LoadingBar from './components/LoadingBar';
+import { useAppContext } from './context/Creatcontext';
+import Login from './pages/Login';
 function App() {
+  const {user}=useAppContext();
   const [isMenuOpen,setIsMenuOpen]=useState(false)
   const {pathname}=useLocation();
   if(pathname==='/loading') {
@@ -19,7 +22,7 @@ function App() {
     w-8 h-8 cursor-pointer md:hidden not-dark:invert' onClick={()=>{
       setIsMenuOpen(true);
     }}/> }
-    <div className='dark: bg-gradient-to-b from-[#fefefe]  to-[#dfdada] '>
+    {user ? (  <div className='dark: bg-gradient-to-b from-[#fefefe]  to-[#dfdada] '>
       <div className='flex h-screen w-screen'>
      <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}/>
      <Routes>
@@ -29,6 +32,12 @@ function App() {
      </Routes>
     </div>
     </div>
+  ) : (
+    <div className='bg-gradient-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
+      <Login/>
+    </div>
+  )}
+  
    </>
   )
 }
