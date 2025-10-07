@@ -4,7 +4,7 @@ import cors from 'cors'
 import connectDB from './configs/db.js';
 import userRouter from './routes/userRoute.js';
 import chatRouter from './routes/chatRoute.js';
-
+import messageRouter from './routes/messageRoute.js';
 const app=express();
 
 
@@ -20,6 +20,8 @@ app.get('/',(req,res)=> res.send('server is live'))
 app.use('/api/user',userRouter);
 
 app.use('/api/chat',chatRouter)
+
+app.use('/api/message',messageRouter);
 const PORT=process.env.PORT|| 3000
 
 app.listen(PORT,()=>{
