@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs";
 import User from "../modals/User.js";
 import jwt from 'jsonwebtoken'
+import Chat from "../modals/Chat.js";
 
 
 
@@ -59,4 +60,28 @@ export const getUser= async(req,res)=>{
         } catch (error) {
             return res.json({success: false,message : error.message})
         }
+}
+
+// To get Published Images
+
+export const getPublishedImages= async(req,res)=>{
+    try {
+        const publishedImageMessages= await Chat.aggregate([{
+            $unwind : "$messages",
+            $match : {
+                "messages.isImage" : true,
+                "messages.isPublished" : true
+            }
+            },
+            {
+                $project : {
+                    _id : 0,
+                    imageUrl : "$messages.content",   
+                    userNmae:  "$userName",
+            }
+        }])
+         res.json({success:true,images : publishedImageMessages.reverse()})
+    } catch (error) {
+         res.json({success: false,message : error.message})
+    }
 }
