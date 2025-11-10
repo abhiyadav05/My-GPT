@@ -2,10 +2,36 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 import { useAppContext } from "../context/Creatcontext";
 import moment from "moment";
+import toast from "react-hot-toast";
 function Sidebar({isMenuOpen,setIsMenuOpen}) {
-  const { chats, setSelectedChat, theme, setTheme, user, navigate } =
+  const { chats, setSelectedChat, theme, setTheme, user, navigate,createNewChat,axios,setChats,fetchUserChats,setToken,token } =
     useAppContext();
   const [search, setSearch] = useState("");
+
+  const logout =()=>{ 
+    localStorage.removeItem('token');
+    setToken(null);
+    toast.success('Logged out successfully');
+  }
+
+  const deletChat= async(e,chatId)=>{
+    try {
+      e.stopPropagation();
+      const confirm= window.confirm('Are you sure you want to delete this chat?');
+      if(!confirm) return;
+      const {data}= await axios.post(`/api/chat/delete`,{chatId},{headers:{Authorization:token}});
+      if(data.success){
+       setChats(prev =>prev.filter(chat => chat._id !== chatId));
+       await fetchUserChats();
+       toast.success(data.message);
+      }else{
+        toast.error(data.message);
+      }
+    } catch (error) { 
+      toast.error(error.message);
+    }
+  }
+
   return (
     <div
       className={
@@ -21,6 +47,7 @@ function Sidebar({isMenuOpen,setIsMenuOpen}) {
       </div>
       {/* New chat button */}
       <button
+        onClick={createNewChat}
         className="flex justify-center items-center w-full py-1.5 mt-6
      text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] text-sm
       rounded-md cursor-pointer"
@@ -78,6 +105,7 @@ function Sidebar({isMenuOpen,setIsMenuOpen}) {
               <img
                 src={assets.bin_icon}
                 alt=""
+                onClick={e=>toast.promise(deletChat(e,chat._id),{loading :'deleting...' })}
                 className="hidden group-hover:block
              w-4 cursor-pointer not-dark:invert"
               />
@@ -160,7 +188,7 @@ function Sidebar({isMenuOpen,setIsMenuOpen}) {
           className="w-7 rounded-full"
         />
           <p  className="flex-1 text-sm dark:text-primary truncate">{user ? user.name : 'Login your account'}</p>
-          {user && <img src={assets.logout_icon} className="h-5 cursor-pointer hidden
+          {user && <img onClick={logout} src={assets.logout_icon} className="h-5 cursor-pointer hidden
            not-dark:invert group-hover:block"/>}
       </div>
       <img onClick={()=>{setIsMenuOpen(false)}}src={assets.close_icon} className="absolute top-3 right-3 w-5 h-5
