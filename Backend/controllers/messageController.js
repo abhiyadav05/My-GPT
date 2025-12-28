@@ -16,7 +16,16 @@ export const textMessageController = async (req, res) => {
       });
     }
     const { chatId, prompt } = req.body;
+    console.log("User ID:", req.user._id);
+    console.log("Chat ID:", chatId);
     const chat = await Chat.findOne({ userId, _id: chatId });
+    if (!chat) {
+  return res.status(404).json({
+    success: false,
+    message: "Chat not found or does not belong to this user"
+  });
+}
+console.log(prompt);
     chat.messages.push({
       role: "user",
       content: prompt,
@@ -25,7 +34,7 @@ export const textMessageController = async (req, res) => {
     });
 
     const {choices} = await openai.chat.completions.create({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash",
       messages: [ 
         {
           role: "user",
@@ -47,6 +56,7 @@ export const textMessageController = async (req, res) => {
      
   } catch (error) {
     res.json({success : false ,message : error.message})
+    // console.log(req.body);
   }
 };
 
