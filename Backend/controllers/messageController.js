@@ -34,14 +34,12 @@ console.log(prompt);
     });
 
     const {choices} = await openai.chat.completions.create({
-      model: "gemini-2.5-flash",
-      messages: [ 
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: "You are a helpful assistant." },
+            { role: "user", content: prompt },
+          ],
+        });
 
     // reply from the ai 
 
@@ -51,6 +49,8 @@ console.log(prompt);
       chat.messages.push(reply);
       await chat.save();
 
+      
+    // console.log(reply); debugging the response from openai
       await User.updateOne({_id: userId},{$inc:{credits:-1}})
 
      
